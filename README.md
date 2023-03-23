@@ -1,6 +1,13 @@
-# ERC20 can have permit function.
-Actually I really want to know how can I transfer Token in other Contract.
-Permit function is a solver.
+# Sample Hardhat Project
 
-It is desgined by EIP-712.
-So I am implementing small example for EIP-712.
+This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+
+Try running some of the following tasks:
+
+```shell
+npx hardhat help
+npx hardhat test
+REPORT_GAS=true npx hardhat test
+npx hardhat node
+npx hardhat run scripts/deploy.ts
+```
