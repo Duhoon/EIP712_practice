@@ -2,6 +2,12 @@ import React, {useState} from 'react';
 import Web3 from 'web3';
 import './App.css';
 
+interface Transfer {
+  from: string,
+  to: string,
+  amount: number,
+}
+
 function App() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -14,7 +20,7 @@ function App() {
       const account = await ethereum.request({method: 'eth_requestAccounts', params:[]});
       setFrom(account[0]);
 
-      console.log(to, from, amount);
+      console.log(from, to, amount);
 
       const typeData = {
         types: {
@@ -24,34 +30,38 @@ function App() {
             {name:'chainId', type:'uint256'},
             {name:'verifyingContract', type:'address'}
           ],
-          Transfer: [
+          Permit: [
             {name:'from', type:'address'},
             {name:'to', type:'address'},
             {name:'amount', type:'uint256'},
           ]
         },
-        primaryType: "Transfer",
+        primaryType: "Permit",
         domain: {
-          chainId: 5,
+          chainId: 1337,
           name: "PermitToken",
           version: "1.0",
-          verifyingContract: '0x'
+          verifyingContract: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
         },
         message: {
-          contents: "Approve To",
-          amount,
           from,
-          to
+          to,
+          amount
         }
       }
       
-      const result = await ethereum.request({
-        method: "eth_signTypedData_v4", 
-        params: [account[0], JSON.stringify(typeData)]
-      })
+      try {
+        const result = await ethereum.request({
+          method: "eth_signTypedData_v4", 
+          params: [account[0], JSON.stringify(typeData)]
+        })
 
-      console.log(result);
-      setSignature(result);
+        console.log(result);
+        setSignature(result);
+
+      } catch(err){
+        console.log(err);
+      }
     }
   }
 
@@ -61,7 +71,7 @@ function App() {
         <h1 className="title">Sign ERC20 Approve</h1>
         <div className="input-group">
           <label>FROM</label>
-          <input value={from} onChange={e=>setFrom(e.target.value)}/>
+          <input value={from} disabled/>
         </div>
         <div className="input-group">
           <label>TO</label>
